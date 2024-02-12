@@ -17,6 +17,8 @@ import CustomBtn from "../../components/CustomBtn";
 import { CustomInput, CustomPasswordInput } from "../../components/CustomInput";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useUser } from "../../constants/context";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const { fontScale } = Dimensions.get("window");
 
@@ -49,12 +51,16 @@ const Login = () => {
     };
   }, []);
 
+  const { SignIn, loading } = useUser();
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <ScrollView keyboardDismissMode="on-drag" style={styles.container}>
+        <Spinner visible={loading} />
+
         {/* Header */}
         <View style={styles.subContainer}>
           <Image
@@ -91,7 +97,7 @@ const Login = () => {
             <CustomBtn
               text="Login"
               primary={true}
-              onPress={() => navigation.navigate("Home")}
+              onPress={() => SignIn(username, password)}
             />
           </View>
         </View>

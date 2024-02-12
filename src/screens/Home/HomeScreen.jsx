@@ -9,20 +9,29 @@ import {
   Animated,
   PanResponder,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import HeaderLogo from "../../components/HeaderLogo";
 import { colors } from "../../theme/theme";
-import CustomBtn from "../../components/CustomBtn";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-import Modal from "react-native-modal";
+import { FontAwesome5 } from "@expo/vector-icons";
 import BottomOptions from "../../components/BottomOptions";
 import HelpCards from "../../components/HelpCards";
 import TrendingNews from "../../components/TrendingNews";
+import ShareProgress from "../../components/ShareProgress";
+import { useUser } from "../../constants/context";
+import moment from "moment";
 
 const { fontScale } = Dimensions.get("window");
 
 const HomeScreen = () => {
   const [isVisible, setisVisible] = useState(false);
+
+  const { userData, GetUser } = useUser();
+
+  useEffect(() => {
+    GetUser();
+  }, []);
+
+  const currentDate = moment();
 
   return (
     <>
@@ -32,9 +41,12 @@ const HomeScreen = () => {
       >
         <HeaderLogo />
 
+        {/* Header */}
         <View style={styles.headerContainer}>
           <View style={{ flexDirection: "column", justifyContent: "center" }}>
-            <Text style={styles.headerText1}>Hi, Alex Kane</Text>
+            <Text style={styles.headerText1} onPress={GetUser}>
+              Hi, {userData?.userName}
+            </Text>
             <Text style={styles.headerText2}>Good Morning</Text>
           </View>
           <Image
@@ -43,28 +55,34 @@ const HomeScreen = () => {
           />
         </View>
 
+        {/* Counter */}
         <View style={styles.centerRows}>
           <Text style={styles.soberText}>You’ve been sober for</Text>
 
           {/* Rows */}
+          <Text>{userData?.sobrietyDate}</Text>
           <View style={styles.row}>
             <Text style={styles.number}>
-              12 <Text style={styles.year}>Years</Text>
+              {currentDate.diff(userData?.sobrietyDate, "years")}{" "}
+              <Text style={styles.year}>Years</Text>
             </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.number}>
-              10 <Text style={styles.year}>Months</Text>
+              {currentDate.diff(userData?.sobrietyDate, "months") % 12}{" "}
+              <Text style={styles.year}>Months</Text>
             </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.number}>
-              23 <Text style={styles.year}>Days</Text>
+              {currentDate.diff(userData?.sobrietyDate, "days") % 30}{" "}
+              <Text style={styles.year}>Days</Text>
             </Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.number}>
-              16 <Text style={styles.year}>Hours</Text>
+              {currentDate.diff(userData?.sobrietyDate, "hours") % 24}{" "}
+              <Text style={styles.year}>Hours</Text>
             </Text>
           </View>
 
@@ -96,54 +114,8 @@ const HomeScreen = () => {
             </View>
 
             {/* Btns */}
-            <View
-              style={{
-                marginVertical: 20,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  color: colors.textColor,
-                  fontSize: 16 / fontScale,
-                  fontWeight: "600",
-                }}
-              >
-                Share My Progress
-              </Text>
 
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 20,
-                  width: "35%",
-                }}
-              >
-                <TouchableOpacity>
-                  <FontAwesome5
-                    name="twitter"
-                    size={24}
-                    color={colors.primary}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <FontAwesome5
-                    name="instagram"
-                    size={24}
-                    color={colors.primary}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <FontAwesome5
-                    name="facebook-f"
-                    size={24}
-                    color={colors.primary}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+            <ShareProgress bottomText={false} />
           </View>
         </View>
 

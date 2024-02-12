@@ -16,6 +16,9 @@ import {
 } from "@expo/vector-icons";
 import { colors } from "../theme/theme";
 import { useNavigation } from "@react-navigation/native";
+import { FIREBASE_AUTH } from "../../FirebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUser } from "../constants/context";
 
 const { fontScale } = Dimensions.get("window");
 
@@ -62,6 +65,14 @@ const BottomOptions = () => {
 
   const navigation = useNavigation();
 
+  const { setUserData, setisAuthenticated } = useUser();
+
+  const LogoutActions = () => {
+    FIREBASE_AUTH.signOut();
+    AsyncStorage.removeItem("userId");
+    setUserData({});
+    setisAuthenticated(false);
+  };
   return (
     <View style={styles.btm}>
       <View style={styles.tabBar}>
@@ -93,11 +104,14 @@ const BottomOptions = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.tabItem}
-          onPress={() => navigation.navigate("SoberCaculator")}
+          onPress={() => navigation.navigate("EditProfile")}
         >
           <AntDesign name="setting" size={24} color={"rgba(64,180,144,0.4)"} />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.tabItem, { position: "relative" }]}>
+        <TouchableOpacity
+          style={[styles.tabItem, { position: "relative" }]}
+          onPress={() => navigation.navigate("Notifications")}
+        >
           <View
             style={{
               height: 8,
@@ -137,7 +151,10 @@ const BottomOptions = () => {
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.optionText}>Find A Meeting</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigation.navigate("SoberCalculator")}
+          >
             <Text style={styles.optionText}>Sober Calculator</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem}>
@@ -148,7 +165,7 @@ const BottomOptions = () => {
               styles.menuItem,
               { flexDirection: "row", alignItems: "center" },
             ]}
-            onPress={() => navigation.navigate("Login")}
+            onPress={LogoutActions}
           >
             <AntDesign name="logout" size={24} color={colors.primary} />
             <Text style={[styles.optionText, { marginLeft: 10 }]}>Logout</Text>
@@ -174,6 +191,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     elevation: 5,
     height: 90,
+    paddingBottom: 10,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
   },

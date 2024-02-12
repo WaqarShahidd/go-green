@@ -25,14 +25,7 @@ const data = [
 
 const HelpCards = () => {
   const renderItem = ({ item, index }) => (
-    <View
-      style={{
-        height: 200,
-        position: "relative",
-        alignItems: "center",
-        justifyContent: "flex-end",
-      }}
-    >
+    <View style={styles.container}>
       <Image
         source={require("../../assets/images/hep.jpg")}
         style={styles.image}
@@ -48,17 +41,7 @@ const HelpCards = () => {
             <View style={{ flex: 1 }}></View>
             <View style={styles.cardContent}>
               <Text style={styles.title}>{item?.title}</Text>
-              <Text
-                style={{
-                  color: "#fff",
-                  fontWeight: "400",
-                  fontSize: 12 / fontScale,
-                  marginTop: 10,
-                  lineHeight: 20,
-                }}
-              >
-                {item?.description}
-              </Text>
+              <Text style={styles.desc}>{item?.description}</Text>
             </View>
           </LinearGradient>
         </View>
@@ -80,6 +63,12 @@ const HelpCards = () => {
 export default HelpCards;
 
 const styles = StyleSheet.create({
+  container: {
+    height: 200,
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
   cardContainer: {
     marginHorizontal: 10,
     width: 300,
@@ -109,8 +98,11 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   description: {
-    fontSize: 14,
+    color: "#fff",
+    fontWeight: "400",
+    fontSize: 12 / fontScale,
     marginTop: 10,
+    lineHeight: 20,
   },
   gradient: {
     flex: 1,

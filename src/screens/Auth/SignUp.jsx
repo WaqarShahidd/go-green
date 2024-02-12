@@ -18,6 +18,18 @@ import moment from "moment/moment";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation } from "@react-navigation/native";
 import DatePickerBtn from "../../components/DatePickerBtn";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  serverTimestamp,
+  where,
+} from "firebase/firestore";
+import { FIREBASE_AUTH, db } from "../../../FirebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useUser } from "../../constants/context";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const { fontScale } = Dimensions.get("window");
 
@@ -29,6 +41,89 @@ const SignUp = () => {
   const [email, setemail] = useState("");
   const [sobrietyDate, setsobrietyDate] = useState("");
 
+  const [loading, setloading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { SignIn } = useUser();
+
+  const isUsernameUnique = async (username) => {
+    console.log(username);
+    const querySnapshot = await getDocs(
+      query(
+        collection(db, "Users"),
+        where("userName", "==", username.toLowerCase())
+      )
+    );
+    return querySnapshot.empty;
+  };
+
+  // Adds a User in Users Collection
+  const OnSubmit = async (id) => {
+    setloading(true);
+    const userCollection = collection(db, "Users");
+
+    addDoc(userCollection, {
+      userName: username.toLowerCase(),
+      email: email,
+      password: password,
+      id: id,
+      avatar: "",
+      sobrietyDate: moment(sobrietyDate).format("YYYY-MM-DD"),
+      sobrietyGoal: "",
+      createdAt: serverTimestamp(),
+    })
+      .then((docRef) => {
+        setloading(false);
+        SignIn(email, password);
+
+        console.log("Document added with ID: ", docRef.id);
+      })
+      .catch((error) => {
+        setloading(false);
+        console.error("Error adding document: ", error);
+      });
+  };
+
+  // Adds to Authentication
+  const SignUp = async () => {
+    const isUnique = await isUsernameUnique(username.toLowerCase());
+    if (!isUnique) {
+      setloading(false);
+      setError("Username is already taken. Please choose a different one.");
+      return;
+    }
+    if (
+      email === "" ||
+      password === "" ||
+      username === "" ||
+      sobrietyDate === ""
+    ) {
+      setError("Please fill all the fields");
+    } else {
+      setloading(true);
+      setError("");
+      try {
+        const response = await createUserWithEmailAndPassword(
+          FIREBASE_AUTH,
+          email,
+          password
+        );
+        OnSubmit(response.user.uid);
+        console.log(response);
+        setloading(false);
+      } catch (error) {
+        setloading(false);
+        console.log(error?.toString());
+        if (
+          error?.toString() ===
+          "FirebaseError: Firebase: Password should be at least 6 characters (auth/weak-password)."
+        ) {
+          setError("Password should be at least 6 characters");
+        }
+      }
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -39,6 +134,8 @@ const SignUp = () => {
         style={styles.container}
         contentContainerStyle={{ paddingBottom: 20 }}
       >
+        <Spinner visible={loading} />
+
         {/* Header */}
         <View style={styles.subContainer}>
           <Image
@@ -56,6 +153,16 @@ const SignUp = () => {
 
         {/* Text Inputs */}
         <View style={styles.inputContainer}>
+          {error && (
+            <Text
+              style={{
+                marginBottom: 25,
+                color: "red",
+              }}
+            >
+              {error}
+            </Text>
+          )}
           <CustomInput
             placeholder="Username"
             value={username}
@@ -89,7 +196,8 @@ const SignUp = () => {
         <CustomBtn
           text="create my account"
           primary={true}
-          onPress={() => navigation.navigate("Home")}
+          // onPress={() => navigation.navigate("Home")}
+          onPress={SignUp}
         />
       </View>
     </KeyboardAvoidingView>

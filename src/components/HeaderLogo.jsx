@@ -3,16 +3,10 @@ import React from "react";
 
 const HeaderLogo = () => {
   return (
-    <View
-      style={{
-        paddingTop: "10%",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <View style={styles.container}>
       <Image
         source={require("../../assets/images/logo.png")}
-        style={{ height: 50, width: 50 }}
+        style={styles.logo}
       />
     </View>
   );
@@ -20,4 +14,11 @@ const HeaderLogo = () => {
 
 export default HeaderLogo;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: "10%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logo: { height: 50, width: 50 },
+});

@@ -18,18 +18,7 @@ export const CustomInput = ({
   margin,
 }) => {
   return (
-    <View
-      style={{
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-        height: 60,
-        borderRadius: 50,
-        paddingHorizontal: 20,
-        backgroundColor: "white",
-        marginTop: margin ? 15 : 0,
-      }}
-    >
+    <View style={[styles.textInputContainer, { marginTop: margin ? 15 : 0 }]}>
       <Icon name={iconName} size={24} color={colors.primary} />
 
       <TextInput
@@ -46,18 +35,7 @@ export const CustomPasswordInput = ({ placeholder, value, setValue }) => {
   const [security, setSecurity] = useState(true);
 
   return (
-    <View
-      style={{
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-        height: 60,
-        borderRadius: 50,
-        paddingHorizontal: 20,
-        backgroundColor: "white",
-        marginTop: 15,
-      }}
-    >
+    <View style={[styles.textInputContainer, { marginTop: 15 }]}>
       <Feather name="lock" size={24} color={colors.primary} />
       <TextInput
         placeholder={placeholder}
@@ -84,4 +62,14 @@ export const CustomPasswordInput = ({ placeholder, value, setValue }) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  textInputContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 50,
+    paddingHorizontal: 20,
+    backgroundColor: "white",
+  },
+});

@@ -22,19 +22,7 @@ const DatePickerBtn = ({ value, setValue, text }) => {
 
   return (
     <>
-      <TouchableOpacity
-        style={{
-          width: "100%",
-          flexDirection: "row",
-          alignItems: "center",
-          height: 60,
-          borderRadius: 50,
-          paddingHorizontal: 20,
-          backgroundColor: "white",
-          marginTop: 15,
-        }}
-        onPress={showDatePicker}
-      >
+      <TouchableOpacity style={styles.container} onPress={showDatePicker}>
         <MaterialCommunityIcons
           name="calendar-range"
           size={24}
@@ -49,18 +37,7 @@ const DatePickerBtn = ({ value, setValue, text }) => {
         >
           {value ? moment(value).format("MM/DD/YYYY") : text}
         </Text>
-        <TouchableOpacity
-          style={{
-            height: 30,
-            width: 30,
-            borderRadius: 15,
-            borderWidth: 1,
-            borderColor: colors.primary,
-            marginLeft: "auto",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <TouchableOpacity style={styles.btn}>
           <MaterialCommunityIcons
             name="arrow-down"
             size={24}
@@ -88,4 +65,25 @@ const DatePickerBtn = ({ value, setValue, text }) => {
 
 export default DatePickerBtn;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 50,
+    paddingHorizontal: 20,
+    backgroundColor: "white",
+    marginTop: 15,
+  },
+  btn: {
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    marginLeft: "auto",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
