@@ -17,18 +17,85 @@ import CustomBtn from "../../components/CustomBtn";
 import Donut from "../../components/Donut";
 import { Switch } from "react-native-switch";
 import ShareProgress from "../../components/ShareProgress";
+import { useUser } from "../../constants/context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../FirebaseConfig";
+import { useNavigation } from "@react-navigation/native";
+import moment from "moment";
+import SobrietyCounter from "../../components/SobrietyCounter";
 
 const { fontScale } = Dimensions.get("window");
 
 const SoberCalculator = () => {
-  const [sobrietyDate, setsobrietyDate] = useState("");
-  const [sobrietyGoal, setsobrietyGoal] = useState("");
+  const { userData, GetUser } = useUser();
+
+  const navigation = useNavigation();
+
+  const [sobrietyDate, setsobrietyDate] = useState(
+    userData?.sobrietyDate || ""
+  );
+  const [sobrietyGoal, setsobrietyGoal] = useState(
+    userData?.sobrietyGoal || ""
+  );
 
   const [switchState, setSwitchState] = useState(false);
 
   const [life, setlife] = useState(false);
 
-  const texts = ["12 Years", "6 Months", "23 Days", "15 Hours"];
+  const [loading, setloading] = useState(false);
+
+  const UpdateUser = async () => {
+    setloading(true);
+    let userID = await AsyncStorage.getItem("userId");
+    try {
+      const usersCollection = collection(db, "Users");
+
+      const q = query(usersCollection, where("id", "==", userID));
+
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        console.error("User with the specified id not found.");
+        setloading(false);
+        return;
+      }
+
+      const targetUserDoc = querySnapshot.docs[0].ref;
+
+      const targetUserSnapshot = await getDoc(targetUserDoc);
+
+      if (targetUserSnapshot.exists()) {
+        const targetUserData = targetUserSnapshot.data();
+
+        await updateDoc(targetUserDoc, {
+          ...targetUserData,
+          sobrietyDate: sobrietyDate,
+          sobrietyGoal: sobrietyGoal,
+        });
+
+        GetUser();
+        navigation.goBack();
+        setloading(false);
+        console.log("User information updated successfully.");
+      } else {
+        console.error("Target user document does not exist.");
+        setloading(false);
+      }
+    } catch (error) {
+      console.error("Error updating user information:", error);
+      setloading(false);
+    }
+  };
+
+  const currentDate = moment();
 
   return (
     <>
@@ -60,34 +127,14 @@ const SoberCalculator = () => {
         <View style={styles.counterContainer}>
           {life ? (
             <Donut
-              percentage={34}
+              percentage={77}
               color={"#00AA6E"}
               delay={500 + 100 * 1}
               max={100}
             />
           ) : (
             <View style={{ marginTop: 10 }}>
-              <Text style={styles.sober}>Days Sober</Text>
-              <View style={styles.row}>
-                <Text style={styles.number}>
-                  12 <Text style={styles.year}>Years</Text>
-                </Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.number}>
-                  10 <Text style={styles.year}>Months</Text>
-                </Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.number}>
-                  23 <Text style={styles.year}>Days</Text>
-                </Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.number}>
-                  16 <Text style={styles.year}>Hours</Text>
-                </Text>
-              </View>
+              <SobrietyCounter text="Days Sober" />
             </View>
           )}
         </View>
@@ -126,7 +173,7 @@ const SoberCalculator = () => {
           </TouchableOpacity>
 
           <View style={{ marginTop: 15 }}>
-            <CustomBtn text="Update" primary={true} />
+            <CustomBtn text="Update" primary={true} onPress={UpdateUser} />
           </View>
         </View>
       </ScrollView>

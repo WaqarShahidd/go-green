@@ -10,7 +10,6 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH, db } from "../../FirebaseConfig";
 
@@ -37,11 +36,9 @@ export function UserProvider({ children }) {
           email,
           password
         );
-
         setloading(false);
-        AsyncStorage.setItem("userId", response.user.uid);
+        await AsyncStorage.setItem("userId", response.user.uid);
         console.log(response.user);
-
         setisAuthenticated(true);
         setError("");
       } catch (error) {

@@ -18,7 +18,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useUser } from "../../constants/context";
 import CustomBtn from "../../components/CustomBtn";
 import * as ImagePicker from "expo-image-picker";
-import { FIREBASE_APP } from "../../../FirebaseConfig";
+import { FIREBASE_APP, db } from "../../../FirebaseConfig";
 import {
   getDownloadURL,
   getStorage,
@@ -26,16 +26,31 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import Spinner from "react-native-loading-spinner-overlay";
+import { useNavigation } from "@react-navigation/native";
 
 const { fontScale } = Dimensions.get("window");
 
 const EditProfile = () => {
-  const { userData } = useUser();
+  const { userData, GetUser } = useUser();
+
+  const navigation = useNavigation();
 
   const [username, setusername] = useState(userData?.userName);
   const [email, setemail] = useState(userData?.email);
   const [sobrietyDate, setsobrietyDate] = useState(userData?.sobrietyDate);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(userData?.avatar);
+
+  const [loading, setloading] = useState(false);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -71,11 +86,56 @@ const EditProfile = () => {
     }
   };
 
+  const UpdateUser = async () => {
+    setloading(true);
+    let userID = await AsyncStorage.getItem("userId");
+    try {
+      const usersCollection = collection(db, "Users");
+
+      const q = query(usersCollection, where("id", "==", userID));
+
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        console.error("User with the specified id not found.");
+        setloading(false);
+        return;
+      }
+
+      const targetUserDoc = querySnapshot.docs[0].ref;
+
+      const targetUserSnapshot = await getDoc(targetUserDoc);
+
+      if (targetUserSnapshot.exists()) {
+        const targetUserData = targetUserSnapshot.data();
+
+        await updateDoc(targetUserDoc, {
+          ...targetUserData,
+          userName: username.toLowerCase(),
+          email: email,
+          avatar: image,
+        });
+
+        GetUser();
+        navigation.goBack();
+        setloading(false);
+        console.log("User information updated successfully.");
+      } else {
+        console.error("Target user document does not exist.");
+        setloading(false);
+      }
+    } catch (error) {
+      console.error("Error updating user information:", error);
+      setloading(false);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
+      <Spinner visible={loading} />
       <ScrollView
         keyboardDismissMode="interactive"
         style={styles.container}
@@ -83,43 +143,28 @@ const EditProfile = () => {
       >
         <HeaderLogo />
 
-        <Text style={styles.titleText}>Edit Profile</Text>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" size={28} color={colors.textColor} />
+          </TouchableOpacity>
+          <Text style={styles.titleText}>Edit Profile</Text>
+        </View>
 
         <>
           {image ? (
             <View style={styles.avatarContainer}>
-              <View
-                style={{
-                  height: 102.5,
-                  width: 102.5,
-                  borderRadius: 360,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image source={{ uri: image }} style={styles.avatar} />
-              </View>
+              <Image source={{ uri: image }} style={styles.avatar} />
             </View>
           ) : (
             <View style={styles.avatarContainer}>
-              <View
-                style={{
-                  height: 102.5,
-                  width: 102.5,
-                  borderRadius: 360,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  source={require("../../../assets/images/person.png")}
-                  style={styles.avatar}
-                />
-              </View>
+              <Image
+                source={require("../../../assets/images/person.png")}
+                style={styles.avatar}
+              />
             </View>
           )}
-          <TouchableOpacity style={styles.uploadButton}>
-            <Text style={{ opacity: 0.8 }}>{"Choose an avatar"}</Text>
+          <TouchableOpacity style={styles.btn} onPress={pickImage}>
+            <Text style={styles.btnText}>Choose an avatar</Text>
           </TouchableOpacity>
         </>
 
@@ -146,7 +191,7 @@ const EditProfile = () => {
           />
         </View>
         <View style={{ margin: 20 }}>
-          <CustomBtn text="update" primary={true} />
+          <CustomBtn text="update" primary={true} onPress={UpdateUser} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -160,16 +205,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 20,
+    marginTop: 20,
+  },
   inputContainer: { marginTop: 10, marginHorizontal: 20, marginTop: "10%" },
   titleText: {
     fontSize: 24 / fontScale,
     color: colors.textColor,
     fontWeight: "700",
-    marginHorizontal: 20,
-    marginTop: 20,
   },
   avatarContainer: {
     marginVertical: 20,
+    height: 102.5,
+    borderRadius: 360,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -184,5 +235,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     width: "60%",
     alignSelf: "center",
+  },
+  btn: {
+    backgroundColor: "#EEFBF7",
+    height: 50,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 75,
+  },
+  btnText: {
+    color: colors.textColor,
+    fontSize: 14 / fontScale,
+    fontWeight: "600",
+    textTransform: "uppercase",
   },
 });

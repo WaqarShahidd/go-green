@@ -18,20 +18,29 @@ import HelpCards from "../../components/HelpCards";
 import TrendingNews from "../../components/TrendingNews";
 import ShareProgress from "../../components/ShareProgress";
 import { useUser } from "../../constants/context";
-import moment from "moment";
+import SobrietyCounter from "../../components/SobrietyCounter";
 
 const { fontScale } = Dimensions.get("window");
 
 const HomeScreen = () => {
-  const [isVisible, setisVisible] = useState(false);
-
   const { userData, GetUser } = useUser();
 
   useEffect(() => {
     GetUser();
   }, []);
 
-  const currentDate = moment();
+  const currentHour = new Date().getHours();
+  let greetingMessage = "";
+
+  if (currentHour >= 5 && currentHour < 12) {
+    greetingMessage = "Good Morning";
+  } else if (currentHour >= 12 && currentHour < 17) {
+    greetingMessage = "Good Afternoon";
+  } else if (currentHour >= 17 && currentHour < 20) {
+    greetingMessage = "Good Evening";
+  } else {
+    greetingMessage = "Good Night";
+  }
 
   return (
     <>
@@ -47,46 +56,23 @@ const HomeScreen = () => {
             <Text style={styles.headerText1} onPress={GetUser}>
               Hi, {userData?.userName}
             </Text>
-            <Text style={styles.headerText2}>Good Morning</Text>
+            <Text style={styles.headerText2}>{greetingMessage}</Text>
           </View>
-          <Image
-            source={require("../../../assets/images/person.png")}
-            style={styles.avatar}
-          />
+          {userData?.avatar === "" ? (
+            <Image
+              source={require("../../../assets/images/person.png")}
+              style={styles.avatar}
+            />
+          ) : (
+            <Image source={{ uri: userData?.avatar }} style={styles.avatar} />
+          )}
         </View>
 
         {/* Counter */}
         <View style={styles.centerRows}>
-          <Text style={styles.soberText}>You’ve been sober for</Text>
-
           {/* Rows */}
-          <Text>{userData?.sobrietyDate}</Text>
-          <View style={styles.row}>
-            <Text style={styles.number}>
-              {currentDate.diff(userData?.sobrietyDate, "years")}{" "}
-              <Text style={styles.year}>Years</Text>
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.number}>
-              {currentDate.diff(userData?.sobrietyDate, "months") % 12}{" "}
-              <Text style={styles.year}>Months</Text>
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.number}>
-              {currentDate.diff(userData?.sobrietyDate, "days") % 30}{" "}
-              <Text style={styles.year}>Days</Text>
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.number}>
-              {currentDate.diff(userData?.sobrietyDate, "hours") % 24}{" "}
-              <Text style={styles.year}>Hours</Text>
-            </Text>
-          </View>
+          <SobrietyCounter text="You’ve been sober for" />
 
-          {/*  */}
           <View style={{ marginTop: 25 }}>
             <Text style={[styles.progressText, { color: colors.textColor }]}>
               You Are Making Great Progress{" "}
@@ -96,7 +82,7 @@ const HomeScreen = () => {
                   { color: colors.primary, fontWeight: "600" },
                 ]}
               >
-                Alex.
+                {userData?.userName}.
               </Text>
             </Text>
 
@@ -113,8 +99,7 @@ const HomeScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Btns */}
-
+            {/* Share Btns */}
             <ShareProgress bottomText={false} />
           </View>
         </View>
@@ -157,33 +142,10 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   avatar: { height: 75, width: 75, borderRadius: 360 },
-  row: {
-    paddingVertical: 12,
-    marginVertical: 0,
-    borderBottomWidth: 1,
-    width: 200,
-    paddingLeft: 70,
-    justifyContent: "center",
-  },
-  number: {
-    color: "#000",
-    fontSize: 20 / fontScale,
-    fontWeight: "600",
-  },
-  year: {
-    color: colors.primary,
-    fontSize: 16 / fontScale,
-    fontWeight: "500",
-  },
   centerRows: {
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
-  },
-  soberText: {
-    color: colors.primary,
-    fontSize: 20 / fontScale,
-    fontWeight: "700",
   },
   progressText: {
     fontSize: 16 / fontScale,

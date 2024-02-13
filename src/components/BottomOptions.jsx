@@ -73,6 +73,7 @@ const BottomOptions = () => {
     setUserData({});
     setisAuthenticated(false);
   };
+
   return (
     <View style={styles.btm}>
       <View style={styles.tabBar}>
@@ -104,7 +105,7 @@ const BottomOptions = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.tabItem}
-          onPress={() => navigation.navigate("EditProfile")}
+          onPress={() => navigation.navigate("Setting")}
         >
           <AntDesign name="setting" size={24} color={"rgba(64,180,144,0.4)"} />
         </TouchableOpacity>
@@ -157,7 +158,10 @@ const BottomOptions = () => {
           >
             <Text style={styles.optionText}>Sober Calculator</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigation.navigate("Setting")}
+          >
             <Text style={styles.optionText}>My Settings</Text>
           </TouchableOpacity>
           <TouchableOpacity

@@ -5,9 +5,11 @@ import {
   FlatList,
   Image,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const { fontScale } = Dimensions.get("window");
 
@@ -15,7 +17,7 @@ const data = [
   {
     id: "1",
     title: "Find A Meeting",
-    description: " Find a local sobriety meeting near you.",
+    description: "Find a local sobriety meeting near you.",
   },
   { id: "2", title: "Card 2", description: "Description for Card 2" },
   { id: "3", title: "Card 3", description: "Description for Card 3" },
@@ -41,7 +43,7 @@ const HelpCards = () => {
             <View style={{ flex: 1 }}></View>
             <View style={styles.cardContent}>
               <Text style={styles.title}>{item?.title}</Text>
-              <Text style={styles.desc}>{item?.description}</Text>
+              <Text style={styles.description}>{item?.description}</Text>
             </View>
           </LinearGradient>
         </View>

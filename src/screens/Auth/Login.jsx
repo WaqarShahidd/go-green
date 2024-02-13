@@ -15,7 +15,7 @@ import GradientBg from "../../components/GradientBg";
 import { colors } from "../../theme/theme";
 import CustomBtn from "../../components/CustomBtn";
 import { CustomInput, CustomPasswordInput } from "../../components/CustomInput";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../../constants/context";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -25,7 +25,7 @@ const { fontScale } = Dimensions.get("window");
 const Login = () => {
   const navigation = useNavigation();
 
-  const [username, setusername] = useState("");
+  const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
   const [keyboardVisible, setKeyboardVisible] = useState(false);
@@ -51,7 +51,7 @@ const Login = () => {
     };
   }, []);
 
-  const { SignIn, loading } = useUser();
+  const { SignIn, loading, error } = useUser();
 
   return (
     <KeyboardAvoidingView
@@ -73,18 +73,26 @@ const Login = () => {
           <Text style={styles.subtitle}>
             Login with your account information below, if you are struggling to
             login please{" "}
-            <Text style={{ color: colors.primary }}>reset your password</Text>
+            <Text
+              style={{ color: colors.primary }}
+              onPress={() => navigation.navigate("Reset")}
+            >
+              reset your password
+            </Text>
           </Text>
         </View>
 
         {/* Text Inputs */}
         <View style={styles.inputContainer}>
+          {error && (
+            <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
+          )}
           <CustomInput
-            placeholder="Username"
-            value={username}
-            setValue={setusername}
-            Icon={Ionicons}
-            iconName="person-outline"
+            placeholder="Email"
+            value={email}
+            setValue={setemail}
+            Icon={MaterialCommunityIcons}
+            iconName="email-outline"
           />
 
           <CustomPasswordInput
@@ -97,7 +105,7 @@ const Login = () => {
             <CustomBtn
               text="Login"
               primary={true}
-              onPress={() => SignIn(username, password)}
+              onPress={() => SignIn(email, password)}
             />
           </View>
         </View>
