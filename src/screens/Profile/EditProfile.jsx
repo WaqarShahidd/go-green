@@ -72,7 +72,7 @@ const EditProfile = () => {
 
     const storage = getStorage(FIREBASE_APP);
 
-    const storageRef = ref(storage, "images/" + new Date().getTime());
+    const storageRef = ref(storage, "avatars/" + new Date().getTime());
 
     try {
       await uploadBytesResumable(storageRef, blob);

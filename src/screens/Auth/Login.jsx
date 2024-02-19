@@ -85,7 +85,11 @@ const Login = () => {
         {/* Text Inputs */}
         <View style={styles.inputContainer}>
           {error && (
-            <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
+            <Text
+              style={{ color: "red", textAlign: "center", marginBottom: 20 }}
+            >
+              {error}
+            </Text>
           )}
           <CustomInput
             placeholder="Email"
