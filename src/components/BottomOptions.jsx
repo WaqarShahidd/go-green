@@ -100,9 +100,9 @@ const BottomOptions = () => {
             {isMenuOpen ? "Close" : "Menu"}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tabItem}>
+        {/* <TouchableOpacity style={styles.tabItem}>
           <FontAwesome5 name="heart" size={24} color={"rgba(64,180,144,0.4)"} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.tabItem}
           onPress={() => navigation.navigate("Setting")}
