@@ -26,38 +26,13 @@ const BottomOptions = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuHeight = useState(new Animated.Value(0))[0];
 
-  // const panResponder = PanResponder.create({
-  //   onStartShouldSetPanResponder: () => true,
-  //   onMoveShouldSetPanResponder: () => true,
-  //   onPanResponderMove: (evt, gestureState) => {
-  //     Animated.event([null, { dy: menuHeight }], { useNativeDriver: false })(
-  //       evt,
-  //       gestureState
-  //     );
-  //   },
-  //   onPanResponderRelease: (evt, gestureState) => {
-  //     const { dy } = gestureState;
-  //     if (dy > 0 && isMenuOpen && dy > 100) {
-  //       // Adjust the threshold as needed
-  //       setIsMenuOpen(false);
-  //       Animated.timing(menuHeight, {
-  //         toValue: 0,
-  //         duration: 300,
-  //         useNativeDriver: false,
-  //       }).start();
-  //     } else {
-  //       Animated.spring(menuHeight, {
-  //         toValue: isMenuOpen ? 200 : 0,
-  //         useNativeDriver: false,
-  //       }).start();
-  //     }
-  //   },
-  // });
+  const screenHeight = Dimensions.get("window").height;
+  const menuHeightValue = screenHeight * 0.75;
 
   const toggleMenu = () => {
     Animated.timing(menuHeight, {
-      toValue: isMenuOpen ? 0 : 625, // Adjust the height as needed
-      duration: 300, // Animation duration
+      toValue: isMenuOpen ? 0 : menuHeightValue,
+      duration: 300,
       useNativeDriver: false,
     }).start();
     setIsMenuOpen(!isMenuOpen);

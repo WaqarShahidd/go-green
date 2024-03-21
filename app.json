@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "go-green",
+    "name": "Go Green",
     "slug": "go-green",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/gogreen.png",
     "userInterfaceStyle": "light",
@@ -16,13 +16,23 @@
       "supportsTablet": true
     },
     "android": {
+      "androidStatusBar": {
+        "translucent": false
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/gogreen.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "versionCode": 3,
+      "package": "com.nucleus.gogreen"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6e8bd2c7-9dae-4266-a7fe-9aa2de499cdb"
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Platform } from "react-native";
 import React from "react";
 
 const HeaderLogo = () => {
@@ -16,7 +16,7 @@ export default HeaderLogo;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: "10%",
+    paddingTop: Platform.OS === "ios" ? "10%" : "7.5%",
     justifyContent: "center",
     alignItems: "center",
   },
