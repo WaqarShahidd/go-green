@@ -29,19 +29,6 @@ const HomeScreen = () => {
     GetUser();
   }, []);
 
-  const currentHour = new Date().getHours();
-  let greetingMessage = "";
-
-  if (currentHour >= 5 && currentHour < 12) {
-    greetingMessage = "Good Morning";
-  } else if (currentHour >= 12 && currentHour < 17) {
-    greetingMessage = "Good Afternoon";
-  } else if (currentHour >= 17 && currentHour < 20) {
-    greetingMessage = "Good Evening";
-  } else {
-    greetingMessage = "Good Night";
-  }
-
   return (
     <>
       <ScrollView
@@ -56,7 +43,6 @@ const HomeScreen = () => {
             <Text style={styles.headerText1} onPress={GetUser}>
               Hi, {userData?.userName}
             </Text>
-            <Text style={styles.headerText2}>{greetingMessage}</Text>
           </View>
           {userData?.avatar === "" ? (
             <Image
@@ -71,7 +57,7 @@ const HomeScreen = () => {
         {/* Counter */}
         <View style={styles.centerRows}>
           {/* Rows */}
-          <SobrietyCounter text="You’ve been sober for" />
+          <SobrietyCounter text="You’ve been clean for" />
 
           <View style={{ marginTop: 25 }}>
             <Text style={[styles.progressText, { color: colors.textColor }]}>
@@ -88,16 +74,9 @@ const HomeScreen = () => {
 
             {/* Progress Text */}
             <Text style={styles.subProgressText}>
-              You can edit your goals and sobriety date incase of a relapse at
-              any time by pressing the button below.
+              Congrats on your clean time {userData?.userName}. Today is the
+              first day of the rest of your life. Go Get it!
             </Text>
-
-            {/* Clean btn */}
-            <View style={{ marginHorizontal: 60, marginTop: 20 }}>
-              <TouchableOpacity style={styles.btn}>
-                <Text style={styles.btnText}>clean calculator</Text>
-              </TouchableOpacity>
-            </View>
 
             {/* Share Btns */}
             <ShareProgress bottomText={false} />
@@ -131,7 +110,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   headerText1: {
-    fontSize: 16 / fontScale,
+    fontSize: 20 / fontScale,
     color: colors.textColor,
     fontWeight: "400",
     marginBottom: 15,

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Go Green",
     "slug": "go-green",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/gogreen.png",
     "userInterfaceStyle": "light",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/gogreen.png",
         "backgroundColor": "#ffffff"
       },
-      "versionCode": 3,
+      "versionCode": 4,
       "package": "com.nucleus.gogreen"
     },
     "web": {

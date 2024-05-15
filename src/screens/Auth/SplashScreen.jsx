@@ -24,9 +24,11 @@ const SplashScreen = () => {
         </Text>
         <Text style={styles.titleText2}>STAY CLEAN</Text>
 
-        <Text style={styles.subtitle}>
-          Track Your Sobriety With{" "}
-          <Text style={{ color: colors.primary }}>Go Green Stay Clean</Text>
+        <Text style={[styles.subtitle, { fontSize: 24, fontWeight: "400" }]}>
+          A Moden Approach To Recovery
+        </Text>
+        <Text style={[styles.subtitle, { marginTop: 15 }]}>
+          Join the Community
         </Text>
       </View>
       <View style={styles.bottom}>

@@ -68,14 +68,13 @@ const SignUp = () => {
       password: password,
       id: id,
       avatar: "",
-      sobrietyDate: moment(sobrietyDate).format("YYYY-MM-DD"),
+      sobrietyDate: "",
       sobrietyGoal: "",
       createdAt: serverTimestamp(),
     })
       .then((docRef) => {
         setloading(false);
         SignIn(email, password);
-
         console.log("Document added with ID: ", docRef.id);
       })
       .catch((error) => {
@@ -92,12 +91,7 @@ const SignUp = () => {
       setError("Username is already taken. Please choose a different one.");
       return;
     }
-    if (
-      email === "" ||
-      password === "" ||
-      username === "" ||
-      sobrietyDate === ""
-    ) {
+    if (email === "" || password === "" || username === "") {
       setError("Please fill all the fields");
     } else {
       setloading(true);
@@ -143,12 +137,11 @@ const SignUp = () => {
             style={{ height: 100, width: 100 }}
           />
 
-          <Text style={styles.headerText}>Let’s Get You Back On Track</Text>
-
-          <Text style={styles.subtitle}>
-            Start tracking your sobriety with our app, register your information
-            below.
+          <Text style={styles.headerText}>
+            Join The Go Green Stay Clean Community Today
           </Text>
+
+          <Text style={styles.subtitle}>A Modern Approach To Recovery</Text>
         </View>
 
         {/* Text Inputs */}
@@ -183,12 +176,6 @@ const SignUp = () => {
             value={password}
             setValue={setpassword}
           />
-
-          <DatePickerBtn
-            value={sobrietyDate}
-            setValue={setsobrietyDate}
-            text="Choose Sobriety Date"
-          />
         </View>
       </ScrollView>
 
@@ -218,7 +205,7 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     fontWeight: "700",
     marginTop: 25,
-    maxWidth: "60%",
+    maxWidth: "85%",
     lineHeight: 40,
     textAlign: "center",
   },
