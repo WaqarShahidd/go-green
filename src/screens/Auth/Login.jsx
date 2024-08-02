@@ -97,6 +97,7 @@ const Login = () => {
             setValue={setemail}
             Icon={MaterialCommunityIcons}
             iconName="email-outline"
+            keyboardType={"email-address"}
           />
 
           <CustomPasswordInput

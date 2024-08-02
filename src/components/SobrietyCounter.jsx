@@ -18,22 +18,26 @@ const SobrietyCounter = ({ text }) => {
       <Text style={styles.soberText}>{text}</Text>
       <View style={styles.row}>
         <Text style={styles.number}>
-          {diff.years()} <Text style={styles.year}>Years</Text>
+          {userData?.sobrietyDate === "" ? 0 : diff.years()}{" "}
+          <Text style={styles.year}>Years</Text>
         </Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.number}>
-          {diff.months()} <Text style={styles.year}>Months</Text>
+          {userData?.sobrietyDate === "" ? 0 : diff.months()}{" "}
+          <Text style={styles.year}>Months</Text>
         </Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.number}>
-          {diff.days()} <Text style={styles.year}>Days</Text>
+          {userData?.sobrietyDate === "" ? 0 : diff.days()}{" "}
+          <Text style={styles.year}>Days</Text>
         </Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.number}>
-          {diff.hours()} <Text style={styles.year}>Hours</Text>
+          {userData?.sobrietyDate === "" ? 0 : diff.hours()}{" "}
+          <Text style={styles.year}>Hours</Text>
         </Text>
       </View>
     </View>

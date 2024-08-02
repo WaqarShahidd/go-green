@@ -16,14 +16,11 @@
       "supportsTablet": true
     },
     "android": {
-      "androidStatusBar": {
-        "translucent": false
-      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/gogreen.png",
         "backgroundColor": "#ffffff"
       },
-      "versionCode": 4,
+      "versionCode": 5,
       "package": "com.nucleus.gogreen"
     },
     "web": {

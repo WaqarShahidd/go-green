@@ -169,6 +169,7 @@ const SignUp = () => {
             setValue={setemail}
             Icon={MaterialCommunityIcons}
             iconName="email-outline"
+            keyboardType={"email-address"}
             margin={true}
           />
           <CustomPasswordInput

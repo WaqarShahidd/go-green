@@ -28,7 +28,7 @@ const SplashScreen = () => {
           A Moden Approach To Recovery
         </Text>
         <Text style={[styles.subtitle, { marginTop: 15 }]}>
-          Join the Community
+          Join the GG Community
         </Text>
       </View>
       <View style={styles.bottom}>

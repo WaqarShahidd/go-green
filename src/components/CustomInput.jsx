@@ -16,6 +16,7 @@ export const CustomInput = ({
   Icon,
   iconName,
   margin,
+  keyboardType,
 }) => {
   return (
     <View style={[styles.textInputContainer, { marginTop: margin ? 15 : 0 }]}>
@@ -25,6 +26,7 @@ export const CustomInput = ({
         value={value}
         onChangeText={(r) => setValue(r)}
         placeholder={placeholder}
+        keyboardType={keyboardType ? keyboardType : "default"}
         style={{ width: "85%", marginLeft: 10 }}
       />
     </View>
